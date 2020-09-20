@@ -7,7 +7,7 @@
 
 #include "AVLbst.h"
 #include "assert.h"
-#include "except.h"
+#include <except.h>
 
 #ifndef AVL_BST_MAX_HEIGHT
 #define AVL_BST_MAX_HEIGHT 32
