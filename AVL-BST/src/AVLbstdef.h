@@ -1,6 +1,8 @@
 /* C Header file:
  *               AVLbstdef.h
  * Type definitions for AVL binary search tree
+ * NOTE: This header is for exclusive use of the implementation and should not
+ * be exposed.
  */
 #ifndef AVL_BST_DEF_H
 #define AVL_BST_DEF_H 1
@@ -24,7 +26,6 @@ struct _AVL_bst {
     AVL_bst_node *root;
     AVL_compare compare;
     size_t nitems;          /* number of items */
-    //uint32_t generation;    /* generation number */
     AVL_alloc alloc;
     AVL_free_node freenode;
     AVL_free_data freedata;
@@ -35,7 +36,6 @@ typedef struct {
     AVL_bst_node *current;                   /* current node in the tree */
     AVL_bst_node *stack[AVL_BST_MAX_HEIGHT]; /* nodes above current node */
     size_t height;                           /* number of nodes in avl_stack */
-    //uint32_t generation;
 } AVL_traverser;
 
 /*========== Inline functions ===========*/
