@@ -7,9 +7,9 @@
 #include <string.h>
 #include <errno.h>
 
-static void AVL_traverser_init(AVL_traverser *trav, AVL_bst *restrict);
-static void tree_left_rotate(AVL_bst_node *node);
-static void tree_right_rotate(AVL_bst_node *node);
+static void AVL_traverser_init(AVL_traverser *, AVL_bst *restrict);
+static void tree_left_rotate(AVL_bst_node *);
+static void tree_right_rotate(AVL_bst_node *);
 
 AVL_bst *AVL_create(void)
 {
@@ -174,7 +174,6 @@ void AVL_clear_node_list(AVL_bst *restrict tree, AVL_bst_node *nodelst)
     AVL_bst_node *q = NULL;
     for (AVL_bst_node *p = nodelst; p; p = q) {
         q = p->subtrees[1];
-        tree->freedata(p->subtrees[0]);
         tree->freenode(p);
     }
 }
@@ -327,7 +326,6 @@ int AVL_delete(AVL_bst *restrict tree, void *key, void **data)
         /* otherchild keeps track of the other child of the parent node */
         AVL_bst_node *parentnode = NULL;
         AVL_bst_node *otherchild = NULL;
-
         while (trav.current->subtrees[1]) { // while current is not a leaf
             trav.stack[trav.height++] = trav.current;
             parentnode = trav.current;
@@ -341,11 +339,12 @@ int AVL_delete(AVL_bst *restrict tree, void *key, void **data)
                 otherchild = parentnode->subtrees[0];
             }
         }
+
         if (tree->compare(trav.current->key, key)) {
             *data = NULL;
             return AVL_DELETE_NON_EXISTENT_KEY_ERR;
         }
-        trav.height--; /* ? remove parentnode from stack */
+        trav.height--; /* remove parentnode from stack */
         parentnode->key = otherchild->key;
         parentnode->height = otherchild->height;
         parentnode->subtrees[0] = otherchild->subtrees[0];
