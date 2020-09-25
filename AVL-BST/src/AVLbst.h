@@ -6,6 +6,13 @@
  * This implements a 'leaf tree', where the data are stored on the
  * leafs of the BST.
  *
+ * This implementation has two 'modes':
+ * 1) Permits only same distinct keys in the tree. To use this,  define
+ *    in the implementation scope:
+ *#define AVL_ONLY_DISTINCT_KEYS
+ * 2) Updates the data if you try same key insertion (The previous data
+ *    will be lost. This is the standard mode.
+ *
  * Public functions:
  *
  * AVL_bst *AVL_create(void);
@@ -82,13 +89,17 @@
  *         - mapfn   -> a mapping function to map the nodes of the list
  *
  * void AVL_clear_node_list(AVL_bst *restrict tree, AVL_bst_node *nodelst);
- *     Function that empties the nodes list created by AVL_interval_find
+ *     Function that empties the nodes list created by AVL_interval_find.
+ *     Note that this doesn't frees only the list of leaf nodes returned
+ *     by AVL_interval_find, but not the data itself.
  *     Parameters:
  *         - tree    -> the AVL tree from which the list were obtained
  *         - nodelst -> the node's list created by AVL_interval_find
  *
  * int AVL_insert(AVL_bst *restrict tree, void *key, void *data);
  *     Function that inserts a new data with given key in the tree.
+ *     IMPORTANT: It's advised that key and data must  be pont  to
+ *                different locations in memory.
  *     Parameters:
  *         - tree -> the AVL tree on which to insert the data
  *         - key  -> the key of the data
@@ -97,7 +108,7 @@
  *         - AVL_SUCCESS, if successfull
  *         - AVL_MAX_HEIGHT_ERR, if the tree reaches the  maximum  permitted
  *           height
- *         - AVL_DISTINCT_KEY_ERR (TO CHANGE)
+ *         - AVL_DISTINCT_KEY_ERR (if AVL_ONLY_DISTINCT_KEYS is defined)
  *
  * int AVL_delete(AVL_bst *restrict tree, void *key, void **data);
  *     Function that deletes the data with the given key in the tree.
@@ -122,15 +133,11 @@
  *         - AVL_EMPTY_TREE_ERR, if the tree is empty
  *         - AVL_MAX_HEIGHT_ERR, if the height of the tree is greater  than
  *           the permitted
- *
- * TODO:
- * - Change to permit same key insertions
- * - Add compare_data and change compare to compare_key
- * - Rigorous testing
- * - ...
  */
 #ifndef AVL_BST_H
 #define AVL_BST_H 1
+
+/*#define AVL_ONLY_DISTINCT_KEYS */
 
 #include <inttypes.h>
 #include <stdlib.h>
