@@ -193,7 +193,6 @@ int AVL_insert(AVL_bst *restrict tree, void *key, void *data)
     else {
         AVL_traverser trav;
         AVL_traverser_init(&trav, tree);
-        //AVL_bst_node *tmpnode = tree->root;
 
         while (trav.current->subtrees[1] && trav.height <= AVL_BST_MAX_HEIGHT) {
             trav.stack[trav.height++] = trav.current;  /* for rebalancing */
@@ -209,7 +208,14 @@ int AVL_insert(AVL_bst *restrict tree, void *key, void *data)
         }
         /* Found a candidate leaf */
         if (!tree->compare(trav.current->key, key)) { /* permit only distinct keys */
-            return  AVL_DISTINCT_KEY_ERR;
+#ifdef AVL_ONLY_DISTINCT_KEYS
+            return AVL_DISTINCT_KEY_ERR;
+#else  /* Updates the data if try same key insertion */
+            void *tmpdata = (void *) trav.current->subtrees[0];
+            trav.current->subtrees[0] = (AVL_bst_node *) data;
+            tree->freedata(tmpdata);
+            goto UPDATE_ONLY;
+#endif
         }
 
         AVL_bst_node *oldleaf = tree->alloc(sizeof *oldleaf);
@@ -233,6 +239,7 @@ int AVL_insert(AVL_bst *restrict tree, void *key, void *data)
             trav.current->subtrees[0] = newleaf;
             trav.current->subtrees[1] = oldleaf;
         }
+
         trav.current->height = 1;
         ++tree->nitems;
         /* Rebalance */
@@ -286,6 +293,11 @@ int AVL_insert(AVL_bst *restrict tree, void *key, void *data)
                 break;
         }
     }
+
+#ifndef AVL_ONLY_DISTINCT_KEYS
+   UPDATE_ONLY:
+#endif
+
     return AVL_SUCCESS;
 }
 
