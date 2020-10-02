@@ -162,6 +162,8 @@ inline void *AVL_get_data_from_node(AVL_bst_node *node)
 
 void AVL_process_node_list(AVL_bst_node *nodelst, AVL_map mapfn)
 {
+    assert(nodelst && mapfn);
+    
     for (AVL_bst_node *p = nodelst; p; p = p->subtrees[1]) {
         mapfn(p->subtrees[0]);
     }
