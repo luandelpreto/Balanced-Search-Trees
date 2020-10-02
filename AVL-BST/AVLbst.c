@@ -410,6 +410,8 @@ int AVL_delete(AVL_bst *restrict tree, void *key, void **data)
 
 int AVL_traverse_preorder(AVL_bst *restrict tree, AVL_map mapfn)
 {
+    assert(tree && mapfn);
+    
     if (!tree->root->subtrees[0]) { /* empty tree */
         return AVL_EMPTY_TREE_ERR;
     }
