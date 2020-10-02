@@ -72,7 +72,7 @@ int AVL_clear(AVL_bst *restrict tree)
         }
     }
     /* free last leaf node */
-    tree->freedata(p->subtrees[0]);
+    if (tree->freedata) tree->freedata(p->subtrees[0]);
     tree->freenode(p);
 
     *tree = (AVL_bst){ .root = NULL, .nitems = 0 };
