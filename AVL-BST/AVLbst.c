@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <stdio.h>
 
 static void AVL_traverser_init(AVL_traverser *, AVL_bst *restrict);
 static void tree_left_rotate(AVL_bst_node *);
