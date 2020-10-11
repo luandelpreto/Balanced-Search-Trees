@@ -1,5 +1,5 @@
 /* C file:
- *         AVLbst.c
+ *         Lor_AVLbst.c
  * Implementation for AVL binary search tree
  */
 #include "Lor_AVLbstdef.h"
