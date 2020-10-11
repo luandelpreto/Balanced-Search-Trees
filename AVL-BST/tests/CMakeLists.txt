@@ -5,6 +5,6 @@ add_executable(utesting.out
 )
 
 target_link_libraries(utesting.out
-    BStrees
+    LorenaBSTs
     cmocka
 )
