@@ -1,5 +1,5 @@
 /* C Header file:
- *               AVLbstdef.h
+ *               Lor_AVLbstdef.h
  * Type definitions for AVL binary search tree
  * NOTE: This header file is for exclusive use of the implementation
  * and should not be exposed.
