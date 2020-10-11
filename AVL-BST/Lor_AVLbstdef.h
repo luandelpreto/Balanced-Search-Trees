@@ -1,5 +1,5 @@
 /* C Header file:
- *               Lor_AVLbstdef.h
+ *               AVLbstdef.h
  * Type definitions for AVL binary search tree
  * NOTE: This header file is for exclusive use of the implementation
  * and should not be exposed.
@@ -8,7 +8,7 @@
 #define LOR_AVL_BST_DEF_H 1
 
 #include "Lor_AVLbst.h"
-#include <assert.h>
+#include <Lor_assert.h>
 
 #ifndef LOR_AVL_BST_MAX_HEIGHT
 #define LOR_AVL_BST_MAX_HEIGHT 32
