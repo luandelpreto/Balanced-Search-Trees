@@ -4,6 +4,6 @@ include_directories(AVL-BST)
 
 add_subdirectory(AVL-BST)
 
-add_library(BStrees SHARED
-    AVL-BST/AVLbst.c
+add_library(LorenaBSTs SHARED
+    AVL-BST/Lor_AVLbst.c
 )
