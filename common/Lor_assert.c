@@ -3,9 +3,20 @@
  */
 #include "Lor_assert.h"
 
-void Lor_assert_abort(const char *restrict, const char *restrict, unsigned long);
+extern void (Lor_assert)(int, const char *restrict);
 
-void (Lor_assert)(int e, const char *restrict reason)
+void Lor_assert_abort(const char *restrict reason, const char *restrict file, unsigned long line)
 {
-    Lor_assert(e, reason);
+    fprintf(stderr, "Assertion failed");
+    if (file && line) {
+        fprintf(stderr, " at %s: %lu: ", file, line);
+    }
+
+    if (reason) {
+        fprintf(stderr, "%s", reason);
+    }
+
+    fprintf(stderr, "\naborting...\n");
+    fflush(stderr);
+    abort();
 }
