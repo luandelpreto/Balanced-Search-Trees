@@ -17,8 +17,9 @@ extern void Lor_assert(int e, const char *restrict reason);
 
 inline void Lor_assert_abort(const char *restrict reason, const char *restrict file, unsigned long line)
 {
+    fprintf(stderr, "Assertion failed");
     if (file && line) {
-        fprintf(stderr, "Assertion failed at %s: %lu: ", file, line);
+        fprintf(stderr, "at %s: %lu: ", file, line);
     }
 
     if (reason) {
