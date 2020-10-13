@@ -129,8 +129,8 @@
  *         - LOR_AVL_DELETE_NON_EXISTENT_KEY_ERR, if the given key does not exist
  *           in the tree
  *
- * int Lor_AVL_traverse_preorder(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn);
- *     Function the traverses the tree applying mapfn function.
+ * int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn);
+ *     Function the traverses the tree applying mapfn function over data.
  *     Parameters:
  *         - tree  -> the Lor_AVL_bst tree to be traversed
  *         - mapfn -> the mapping function to be applied over each node  of
@@ -182,6 +182,6 @@ extern void Lor_AVL_process_node_list(Lor_AVL_bst_node *nodelst, Lor_AVL_map map
 extern void Lor_AVL_clear_node_list(Lor_AVL_bst *restrict tree, Lor_AVL_bst_node *nodelst);
 extern int Lor_AVL_insert(Lor_AVL_bst *restrict tree, void *key, void *data);
 extern int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data);
-extern int Lor_AVL_traverse_preorder(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn);
+extern int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn);
 
 #endif
