@@ -222,7 +222,7 @@ int Lor_AVL_insert(Lor_AVL_bst *restrict tree, void *key, void *data)
             void *tmpdata = (void *) trav.current->subtrees[0];
             trav.current->subtrees[0] = (Lor_AVL_bst_node *) data;
             if (tree->freedata) tree->freedata(tmpdata);
-            goto UPDATE_ONLY;
+            return LOR_AVL_SUCCESS;
 #endif
         }
 
@@ -301,10 +301,6 @@ int Lor_AVL_insert(Lor_AVL_bst *restrict tree, void *key, void *data)
                 break;
         }
     }
-
-#ifndef LOR_AVL_ONLY_DISTINCT_KEYS
-   UPDATE_ONLY:
-#endif
 
     return LOR_AVL_SUCCESS;
 }
