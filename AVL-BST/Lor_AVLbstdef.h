@@ -9,7 +9,6 @@
 
 #include "Lor_AVLbst.h"
 #include <Lor_assert.h>
-//#include <assert.h>
 
 #ifndef LOR_AVL_BST_MAX_HEIGHT
 #define LOR_AVL_BST_MAX_HEIGHT 32
@@ -18,10 +17,10 @@
 struct _Lor_AVL_bst_node {
     int32_t height;
     void *key;
-    struct _Lor_AVL_bst_node *subtrees[2];  /* [0] for left, [1] for right subtree */
-};                                          /* In this tree model, the data is stored */
-                                            /* on a leaf's left node.                 */
-
+    struct _Lor_AVL_bst_node *subtrees[2];  /* [0] for  left,  [1]  for  right subtree   */
+};                                          /* In this  tree  model,  the  pointer  to   */
+                                            /* the data is stored on a leaf's left node. */
+                                            
 struct _Lor_AVL_bst {
     size_t nitems;          /* number of items */
     Lor_AVL_bst_node *root;
