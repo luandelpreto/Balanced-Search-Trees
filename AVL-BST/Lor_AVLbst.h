@@ -7,8 +7,8 @@
  * leafs of the BST.
  *
  * This implementation has two 'modes':
- * 1) Permits only same distinct keys in the tree. To use this,  define
- *    in the implementation scope:
+ * 1) Permits only distinct keys in the tree.  To use this,  define  in
+ *    the implementation scope:
  *#define LOR_AVL_ONLY_DISTINCT_KEYS
  * 2) Updates the data if you try same key insertion (The previous data
  *    will be lost. This is the standard mode.
