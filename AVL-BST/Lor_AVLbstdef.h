@@ -20,7 +20,7 @@ struct _Lor_AVL_bst_node {
     struct _Lor_AVL_bst_node *subtrees[2];  /* [0] for  left,  [1]  for  right subtree   */
 };                                          /* In this  tree  model,  the  pointer  to   */
                                             /* the data is stored on a leaf's left node. */
-                                            
+
 struct _Lor_AVL_bst {
     size_t nitems;          /* number of items */
     Lor_AVL_bst_node *root;

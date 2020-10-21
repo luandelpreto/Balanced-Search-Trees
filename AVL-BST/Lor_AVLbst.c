@@ -419,7 +419,7 @@ int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
     return LOR_AVL_SUCCESS;
 }
 
-int Lor_AVL_traverse_preorder(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn)
+int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn)
 {
     Lor_assert(tree, "argument tree must be non-NULL");
     Lor_assert(mapfn, "argument mapfn must be non-NULL");
