@@ -1,6 +1,10 @@
 # Lorena Balanced Search Trees lib
 
 ## This library implements flavors of Balanced Search Trees
+## Dependencies:
+    cmake
+    cmocka
+
 ## What is exposed:
 
 - [x] Memory Pool
@@ -10,7 +14,7 @@
 - [ ] Red-Black Tree
 - [ ] Splay Tree
 
-### References
+### References:
     Advanced Data Structures - Peter Brass
     GSL - https://www.gnu.org/software/gsl/
     Git - https://github.com/git/git
