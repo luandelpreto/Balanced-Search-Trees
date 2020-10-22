@@ -11,7 +11,7 @@ add_subdirectory(Mem-Pool)
 add_subdirectory(AVL-BST)
 
 add_library(LorenaBSTs SHARED
-    common/Lor_assert
+	common/Lor_assert
 	Mem-Pool/Lor_mem_pool.c
-    AVL-BST/Lor_AVLbst.c
+	AVL-BST/Lor_AVLbst.c
 )
