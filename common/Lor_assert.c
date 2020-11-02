@@ -5,7 +5,7 @@
 
 extern void (Lor_assert)(int, const char *restrict);
 
-void Lor_assert_abort(const char *restrict reason, const char *restrict file, unsigned long line)
+_Noreturn void Lor_assert_abort(const char *restrict reason, const char *restrict file, unsigned long line)
 {
     fprintf(stderr, "Assertion failed");
     if (file && line) {

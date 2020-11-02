@@ -11,7 +11,7 @@
 #ifdef NDEBUG
 #define Lor_assert(e, reason) ((void)0)
 #else
-void Lor_assert_abort(const char *restrict reason, const char *restrict file, unsigned long line);
+_Noreturn void Lor_assert_abort(const char *restrict reason, const char *restrict file, unsigned long line);
 #define LOR_ABORT(reason) Lor_assert_abort((reason), __FILE__, __LINE__+0UL)
 #define Lor_assert(e, reason) ((void)((e)||(LOR_ABORT(reason),0)))
 
