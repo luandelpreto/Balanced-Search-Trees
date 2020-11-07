@@ -3,6 +3,7 @@
  * Implementation for AVL binary search tree
  */
 #include "Lor_AVLbstdef.h"
+#include <Lor_error_log.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -16,8 +17,7 @@ Lor_AVL_bst *Lor_AVL_create(void)
 {
     Lor_AVL_bst *tree = malloc(sizeof *tree);
     if (!tree) {
-        perror("malloc failed");
-        errno = 0;
+        LOR_PERROR("malloc failed");
         return NULL;
     }
     return tree;

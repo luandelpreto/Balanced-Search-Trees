@@ -5,6 +5,7 @@
  */
 #include "Lor_mem_pool_def.h"
 #include <Lor_assert.h>
+#include <Lor_error_log.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <stdio.h>
@@ -47,8 +48,7 @@ static mem_pool_block *__mem_pool_alloc_block(Lor_mem_pool *pool, size_t blockal
 
     mem_pool_block *p = malloc(szsum);
     if (!p) {
-        perror("malloc failed");
-        errno = 0;
+        LOR_PERROR("malloc failed");
         pool->poolalloc = oldpoolalloc;
         return NULL;
     }
@@ -72,8 +72,7 @@ Lor_mem_pool *Lor_mem_pool_create(void)
 {
     Lor_mem_pool *pool = malloc(sizeof *pool);
     if (!pool) {
-        perror("malloc failed");
-        errno = 0;
+        LOR_PERROR("malloc failed");
         return NULL;
     }
     return pool;
