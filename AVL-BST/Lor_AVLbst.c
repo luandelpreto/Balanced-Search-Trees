@@ -123,7 +123,11 @@ Lor_AVL_bst_node *Lor_AVL_interval_find(Lor_AVL_bst *restrict tree, const void *
     Lor_assert(a && b, "arguments a and b must be non-NULL");
 
     Lor_AVL_bst_node *list = NULL;
-    Lor_AVL_bst_node *stack[2 * tree->nitems];
+    Lor_AVL_bst_node **stack = malloc(2 * tree->nitems * sizeof(*stack));
+    if (!stack) {
+        LOR_PERROR("malloc failed");
+        return NULL;
+    }
     size_t top = 0;
 
     stack[top++] = tree->root;
