@@ -29,10 +29,10 @@ int Lor_AVL_init(Lor_AVL_bst *restrict tree, Lor_AVL_compare compare, Lor_AVL_al
     Lor_assert(tree, "argument tree must be non-NULL");
 
     if (!compare) {
-        return LOR_AVL_COMPARE_FN_NOT_PROVIDED_ERR;
+        return LOR_COMPARE_FN_NOT_PROVIDED_ERR;
     }
     if (!alloc) {
-        return LOR_AVL_ALLOC_FN_NOT_PROVIDED_ERR;
+        return LOR_ALLOC_FN_NOT_PROVIDED_ERR;
     }
 
     tree->alloc = alloc;
@@ -44,7 +44,7 @@ int Lor_AVL_init(Lor_AVL_bst *restrict tree, Lor_AVL_compare compare, Lor_AVL_al
     tree->freenode = (freenode) ? freenode : free;
     tree->freedata = freedata;
 
-    return LOR_AVL_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 int Lor_AVL_clear(Lor_AVL_bst *restrict tree)
@@ -52,10 +52,10 @@ int Lor_AVL_clear(Lor_AVL_bst *restrict tree)
     Lor_assert(tree, "argument tree must be non-NULL");
 
     if (!tree->root) {
-        return LOR_AVL_FREE_NULLPTR_ERR;
+        return LOR_FREE_NULLPTR_WARN;
     }
     if (!tree->root->subtrees[0]) { /* empty tree */
-        return LOR_AVL_EMPTY_TREE_ERR;
+        return LOR_EMPTY_TREE_ERR;
     }
 
     Lor_AVL_bst_node *p = tree->root;
@@ -77,23 +77,23 @@ int Lor_AVL_clear(Lor_AVL_bst *restrict tree)
     tree->freenode(p);
 
     *tree = (Lor_AVL_bst){ .root = NULL, .nitems = 0 };
-    return LOR_AVL_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 int Lor_AVL_destroy(Lor_AVL_bst **restrict tree)
 {
     if (!(*tree)) {
-        return LOR_AVL_FREE_NULLPTR_ERR;
+        return LOR_FREE_NULLPTR_WARN;
     }
     else {
         if (!(*tree)->root) {
             free(*tree);
         }
         else {
-            return LOR_AVL_DESTROY_ROOT_NON_NULL;
+            return LOR_DESTROY_ROOT_NON_NULL;
         }
     }
-    return LOR_AVL_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 Lor_AVL_bst_node *Lor_AVL_find(Lor_AVL_bst *restrict tree, const void *key)
@@ -212,17 +212,17 @@ int Lor_AVL_insert(Lor_AVL_bst *restrict tree, void *key, void *data)
             }
         }
         if (trav.height > LOR_AVL_BST_MAX_HEIGHT){
-            return LOR_AVL_MAX_HEIGHT_ERR;
+            return LOR_MAX_HEIGHT_ERR;
         }
         /* Found a candidate leaf */
         if (!tree->compare(trav.current->key, key)) { /* permit only distinct keys */
 #ifdef LOR_AVL_ONLY_DISTINCT_KEYS
-            return LOR_AVL_DISTINCT_KEY_ERR;
+            return LOR_DISTINCT_KEY_ERR;
 #else  /* Updates the data if try same key insertion */
             void *tmpdata = (void *) trav.current->subtrees[0];
             trav.current->subtrees[0] = (Lor_AVL_bst_node *) data;
             if (tree->freedata) tree->freedata(tmpdata);
-            return LOR_AVL_SUCCESS;
+            return LOR_SUCCESS;
 #endif
         }
 
@@ -302,7 +302,7 @@ int Lor_AVL_insert(Lor_AVL_bst *restrict tree, void *key, void *data)
         }
     }
 
-    return LOR_AVL_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
@@ -313,7 +313,7 @@ int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
 
     if (!tree->root->subtrees[0]) {  // empty tree
         *data = NULL;
-        return LOR_AVL_EMPTY_TREE_ERR;
+        return LOR_EMPTY_TREE_ERR;
     }
     else if (!tree->root->subtrees[1]) { // only one element in tree
         if (!tree->compare(tree->root->key, key)) {
@@ -323,7 +323,7 @@ int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
         }
         else {
             *data = NULL;
-            return LOR_AVL_DELETE_NON_EXISTENT_KEY_ERR;
+            return LOR_DELETE_NON_EXISTENT_KEY_ERR;
         }
     }
     else {
@@ -349,7 +349,7 @@ int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
 
         if (tree->compare(trav.current->key, key)) {
             *data = NULL;
-            return LOR_AVL_DELETE_NON_EXISTENT_KEY_ERR;
+            return LOR_DELETE_NON_EXISTENT_KEY_ERR;
         }
         trav.height--; /* remove parentnode from stack */
         parentnode->key = otherchild->key;
@@ -412,7 +412,7 @@ int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
                 break;
         }
     }
-    return LOR_AVL_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn)
@@ -421,7 +421,7 @@ int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn)
     Lor_assert(mapfn, "argument mapfn must be non-NULL");
 
     if (!tree->root->subtrees[0]) { /* empty tree */
-        return LOR_AVL_EMPTY_TREE_ERR;
+        return LOR_EMPTY_TREE_ERR;
     }
 
     Lor_AVL_traverser trav;
@@ -441,10 +441,10 @@ int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn)
     }
 
     if (trav.height > LOR_AVL_BST_MAX_HEIGHT) {
-        return LOR_AVL_MAX_HEIGHT_ERR;
+        return LOR_MAX_HEIGHT_ERR;
     }
     else {
-        return LOR_AVL_SUCCESS;
+        return LOR_SUCCESS;
     }
 }
 

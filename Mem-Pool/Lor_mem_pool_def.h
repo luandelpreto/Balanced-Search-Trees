@@ -8,6 +8,7 @@
 #define LOR_MEM_POOL_DEF_H 1
 
 #include "Lor_mem_pool.h"
+#include <Lor_BSTs.h>
 #include <setjmp.h>
 #include <limits.h>
 #include <inttypes.h>
@@ -63,7 +64,7 @@ struct _Lor_mem_pool {
 static inline size_t __st_add(jmp_buf env, size_t a, size_t b)
 {
     if (UNSIGNED_ADD_OVERFLOWS(a, b)) {
-        longjmp(env, LOR_MP_USIZE_OVERFLOW_ERR);
+        longjmp(env, LOR_USIZE_OVERFLOW_ERR);
     }
 
     return a + b;
@@ -72,7 +73,7 @@ static inline size_t __st_add(jmp_buf env, size_t a, size_t b)
 static inline size_t __st_mult(jmp_buf env, size_t a, size_t b)
 {
     if (UNSIGNED_MULT_OVERFLOWS(a, b)) {
-        longjmp(env, LOR_MP_USIZE_OVERFLOW_ERR);
+        longjmp(env, LOR_USIZE_OVERFLOW_ERR);
     }
 
     return a * b;

@@ -35,10 +35,10 @@
  *         - freenode -> a free function for deallocation of nodes
  *         - freedata -> a free function for deallocation of data
  *     Returns:
- *         - LOR_AVL_SUCCESS if successfull
- *         - LOR_AVL_COMPARE_FN_NOT_PROVIDED_ERR if compare function has not been
+ *         - LOR_SUCCESS if successfull
+ *         - LOR_COMPARE_FN_NOT_PROVIDED_ERR if compare function has not been
  *           provided
- *         - LOR_AVL_ALLOC_FN_NOT_PROVIDED_ERR if  allocation  function  has  not
+ *         - LOR_ALLOC_FN_NOT_PROVIDED_ERR if  allocation  function  has  not
  *           been provided
  *
  * int Lor_AVL_destroy(Lor_AVL_bst **restrict tree);
@@ -46,18 +46,18 @@
  *     Parameters:
  *         - tree -> the tree to be destroyed (allocated by AVL_create)
  *     Returns:
- *         - LOR_AVL_SUCCESS if successfull
- *         - LOR_AVL_FREE_NULLPTR_ERR if *tree is a NULL pointer
- *         - LOR_AVL_DESTROY_ROOT_NON_NULL if the root of the tree is non-NULL
+ *         - LOR_SUCCESS if successfull
+ *         - LOR_FREE_NULLPTR_WARN if *tree is a NULL pointer
+ *         - LOR_DESTROY_ROOT_NON_NULL if the root of the tree is non-NULL
  *
  * int Lor_AVL_clear(Lor_AVL_bst *restrict tree);
  *     This function empties the parameter tree without freeing tree.
  *     Parameters:
  *         - tree -> the tree to be emptied
  *     Returns:
- *         - LOR_AVL_SUCCESS if successfull
- *         - LOR_AVL_FREE_NULLPTR_ERR if the root of the tree is NULL
- *         - LOR_AVL_EMPTY_TREE_ERR if the tree is already empty
+ *         - LOR_SUCCESS if successfull
+ *         - LOR_FREE_NULLPTR_WARN if the root of the tree is NULL
+ *         - LOR_EMPTY_TREE_ERR if the tree is already empty
  *
  * Lor_AVL_bst_node *Lor_AVL_find(Lor_AVL_bst *restrict tree, const void *key);
  *     This function searches for key in tree.
@@ -75,7 +75,7 @@
  *         - a    -> lower limit of interval
  *         - b    -> upper limit of interval
  *     Returns:
- *         - NULL if the interval does not exist in the tree's keys
+ *         - NULL if the interval does not exist in the tree's keys or if the operation cannot be done
  *         - Lor_AVL_bst_node *list, a list of AVL tree nodes with  the  interval
  *           [a, b[. If one of the limits is out of range in the tree's  keys,
  *           it returns [a, <max key on tree>] or [<min key on tree>, b[.
@@ -112,10 +112,10 @@
  *         - key  -> the key of the data
  *         - data -> the data itself as a void pointer
  *     Returns:
- *         - LOR_AVL_SUCCESS, if successfull
- *         - LOR_AVL_MAX_HEIGHT_ERR, if the tree reaches the  maximum  permitted
+ *         - LOR_SUCCESS, if successfull
+ *         - LOR_MAX_HEIGHT_ERR, if the tree reaches the  maximum  permitted
  *           height
- *         - LOR_AVL_DISTINCT_KEY_ERR (if AVL_ONLY_DISTINCT_KEYS is defined)
+ *         - LOR_DISTINCT_KEY_ERR (if AVL_ONLY_DISTINCT_KEYS is defined)
  *
  * int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data);
  *     Function that deletes the data with the given key in the tree.
@@ -124,9 +124,9 @@
  *         - key  -> the key of the data to be removed
  *         - data -> a void ** to return the data as an output parameter
  *     Returns:
- *         - LOR_AVL_SUCCESS, if successfull
- *         - LOR_AVL_EMPTY_TREE_ERR, if the tree is empty
- *         - LOR_AVL_DELETE_NON_EXISTENT_KEY_ERR, if the given key does not exist
+ *         - LOR_SUCCESS, if successfull
+ *         - LOR_EMPTY_TREE_ERR, if the tree is empty
+ *         - LOR_DELETE_NON_EXISTENT_KEY_ERR, if the given key does not exist
  *           in the tree
  *
  * int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn);
@@ -136,9 +136,9 @@
  *         - mapfn -> the mapping function to be applied over each node  of
  *           tree
  *     Returns:
- *         - LOR_AVL_SUCCESS, if successfull
- *         - LOR_AVL_EMPTY_TREE_ERR, if the tree is empty
- *         - LOR_AVL_MAX_HEIGHT_ERR, if the height of the tree is greater  than
+ *         - LOR_SUCCESS, if successfull
+ *         - LOR_EMPTY_TREE_ERR, if the tree is empty
+ *         - LOR_MAX_HEIGHT_ERR, if the height of the tree is greater  than
  *           the permitted
  **************************************************************************/
 #ifndef LOR_AVL_BST_H
@@ -148,18 +148,6 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
-
-enum {
-    LOR_AVL_SUCCESS=0,
-    LOR_AVL_COMPARE_FN_NOT_PROVIDED_ERR,
-    LOR_AVL_ALLOC_FN_NOT_PROVIDED_ERR,
-    LOR_AVL_FREE_NULLPTR_ERR,
-    LOR_AVL_DESTROY_ROOT_NON_NULL,
-    LOR_AVL_DISTINCT_KEY_ERR,
-    LOR_AVL_MAX_HEIGHT_ERR,
-    LOR_AVL_EMPTY_TREE_ERR,
-    LOR_AVL_DELETE_NON_EXISTENT_KEY_ERR,
-};
 
 typedef struct _Lor_AVL_bst_node Lor_AVL_bst_node;
 typedef struct _Lor_AVL_bst Lor_AVL_bst;

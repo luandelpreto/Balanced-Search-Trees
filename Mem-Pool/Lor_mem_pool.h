@@ -11,16 +11,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-enum {
-    LOR_MP_SUCCESS=0,
-    LOR_MP_ZERO_SIZE_ALLOC_ERR,
-    LOR_MP_USIZE_OVERFLOW_ERR,
-    LOR_MP_ALLOC_FAIL_ERR,
-    LOR_MP_FREE_NULLPTR_WARN,
-    LOR_MP_POSSIBLE_MEMLEAK_WARN,
-    LOR_MP_SRC_EMPTY_WARN,
-};
-
 typedef struct _Lor_mem_pool Lor_mem_pool;
 
 /**********************************************************
@@ -39,9 +29,9 @@ extern Lor_mem_pool *Lor_mem_pool_create(void);
  *                initialized
  * \param size    the size of the initial block allocated
  *
- * \return LOR_MP_SUCCESS                if  initialization was successfull
- * \return LOR_MP_ZERO_SIZE_ALLOC_ERR    if trying to alloc a zero sized block
- * \return LOR_MP_USIZE_OVERFLOW_ERR     if a size_t overflow happened during allocation
+ * \return LOR_SUCCESS                if  initialization was successfull
+ * \return LOR_ZERO_SIZE_ALLOC_ERR    if trying to alloc a zero sized block
+ * \return LOR_USIZE_OVERFLOW_ERR     if a size_t overflow happened during allocation
  **********************************************************/
 extern int Lor_mem_pool_init(Lor_mem_pool *pool, size_t size);
 
@@ -51,8 +41,8 @@ extern int Lor_mem_pool_init(Lor_mem_pool *pool, size_t size);
  * \param pool    a pointer to the pointer that  points  to
  *                the Lor_mem_pool object on the heap
  *
- * \return LOR_MP_SUCCESS                  if operation was successfull
- * \return LOR_MP_POSSIBLE_MEMLEAK_WARN    if the block of memory associated
+ * \return LOR_SUCCESS                  if operation was successfull
+ * \return LOR_POSSIBLE_MEMLEAK_WARN    if the block of memory associated
  *                                         with the pool is non-NULL
  **********************************************************/
 extern int Lor_mem_pool_destroy(Lor_mem_pool **pool);
@@ -66,8 +56,8 @@ extern int Lor_mem_pool_destroy(Lor_mem_pool **pool);
  * \param invalidate_mem    a boolean value that  indicates  if  the
  *                          memory is to be invalidated
  *
- * \return LOR_MP_SUCCESS             if the operation was successfull
- * \return LOR_MP_FREE_NULLPTR_WARN   if the memory pool block is NULL
+ * \return LOR_SUCCESS             if the operation was successfull
+ * \return LOR_FREE_NULLPTR_WARN   if the memory pool block is NULL
  **********************************************************/
 extern int Lor_mem_pool_discard(Lor_mem_pool *pool, bool invalidate_mem);
 
@@ -131,7 +121,7 @@ extern char *Lor_mem_pool_strndup(Lor_mem_pool *pool, const char *str, size_t le
  * \param dst    the destination pool to which to move 'src'
  * \param src    the source pool to move to 'dst'
  *
- * \return LOR_MEM_POOL_SUCCESS    if operation was successfull
+ * \return LOR_SUCCESS    if operation was successfull
  * \return
  **********************************************************/
 extern int Lor_mem_pool_combine(Lor_mem_pool *dst, Lor_mem_pool *src);
