@@ -8,6 +8,7 @@
 #define LOR_AVL_BST_DEF_H 1
 
 #include "Lor_AVLbst.h"
+#include <Lor_BSTs.h>
 #include <Lor_assert.h>
 
 #ifndef LOR_AVL_BST_MAX_HEIGHT

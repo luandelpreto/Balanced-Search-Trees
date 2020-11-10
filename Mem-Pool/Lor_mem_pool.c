@@ -38,7 +38,7 @@ static mem_pool_block *__mem_pool_alloc_block(Lor_mem_pool *pool, size_t blockal
     /* Handling size_t overflow */
     jmp_buf env;
     int val = setjmp(env);
-    if (val == LOR_MP_USIZE_OVERFLOW_ERR) {
+    if (val == LOR_USIZE_OVERFLOW_ERR) {
         USIZE_OVERFLOW_MSG(sizeof(mem_pool_block), blockalloc);
         *overflow = true;
         pool->poolalloc = oldpoolalloc;
@@ -90,18 +90,18 @@ int Lor_mem_pool_init(Lor_mem_pool *pool, size_t size)
         bool overflow;
         mem_pool_block *tmp = __mem_pool_alloc_block(pool, size, NULL, &overflow);
         if (overflow) {
-            return LOR_MP_USIZE_OVERFLOW_ERR;
+            return LOR_USIZE_OVERFLOW_ERR;
         }
         else if (!tmp) {
-            return LOR_MP_ALLOC_FAIL_ERR;
+            return LOR_ALLOC_FAIL_ERR;
         }
     }
     else {
-        return LOR_MP_ZERO_SIZE_ALLOC_ERR;
+        return LOR_ZERO_SIZE_ALLOC_ERR;
     }
 
     pool->blockalloc = BLOCK_GROWTH_SIZE;
-    return LOR_MP_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 int Lor_mem_pool_destroy(Lor_mem_pool **pool)
@@ -109,11 +109,11 @@ int Lor_mem_pool_destroy(Lor_mem_pool **pool)
     Lor_assert(*pool, "address of pointer 'pool' must be non-NULL");
 
     if ((*pool)->mpblock) {
-        return LOR_MP_POSSIBLE_MEMLEAK_WARN;
+        return LOR_POSSIBLE_MEMLEAK_WARN;
     }
     free(*pool);
 
-    return LOR_MP_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 int Lor_mem_pool_discard(Lor_mem_pool *pool, bool invalidate_mem)
@@ -121,7 +121,7 @@ int Lor_mem_pool_discard(Lor_mem_pool *pool, bool invalidate_mem)
     Lor_assert(pool, "argument 'pool' must be non-NULL");
 
     if (!pool->mpblock) {
-        return LOR_MP_FREE_NULLPTR_WARN;
+        return LOR_FREE_NULLPTR_WARN;
     }
 
     mem_pool_block *block = pool->mpblock;
@@ -135,7 +135,7 @@ int Lor_mem_pool_discard(Lor_mem_pool *pool, bool invalidate_mem)
     }
     pool->mpblock = NULL;
 
-    return LOR_MP_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 void *Lor_mem_pool_alloc(Lor_mem_pool *pool, size_t len)
@@ -186,7 +186,7 @@ void *Lor_mem_pool_calloc(Lor_mem_pool *pool, size_t count, size_t size)
 
     jmp_buf env;
     int val = setjmp(env);
-    if (val == LOR_MP_USIZE_OVERFLOW_ERR) {
+    if (val == LOR_USIZE_OVERFLOW_ERR) {
         return NULL;
     }
 
@@ -243,8 +243,8 @@ int Lor_mem_pool_combine(Lor_mem_pool *dst, Lor_mem_pool *src)
     jmp_buf env;
     int val = setjmp(env);
     size_t allocsum = 0;
-    if (val == LOR_MP_USIZE_OVERFLOW_ERR) {
-        return LOR_MP_USIZE_OVERFLOW_ERR;
+    if (val == LOR_USIZE_OVERFLOW_ERR) {
+        return LOR_USIZE_OVERFLOW_ERR;
     }
     allocsum = __st_add(env, dst->poolalloc, src->poolalloc);
 
@@ -263,13 +263,13 @@ int Lor_mem_pool_combine(Lor_mem_pool *dst, Lor_mem_pool *src)
         dst->mpblock = src->mpblock;
     }
     else {
-        return LOR_MP_SRC_EMPTY_WARN;
+        return LOR_SRC_EMPTY_WARN;
     }
 
     dst->poolalloc = allocsum;
     src->poolalloc = 0;
     src->mpblock = NULL;
-    return LOR_MP_SUCCESS;
+    return LOR_SUCCESS;
 }
 
 /* End of File */

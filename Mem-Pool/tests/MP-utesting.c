@@ -35,7 +35,7 @@ static void TEST_MEM_POOL_ALLOC(void **state)
     Lor_mem_pool *pool = Lor_mem_pool_create();
     assert_non_null(pool);
 
-    assert_int_equal(Lor_mem_pool_init(pool, 4094*4096), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_init(pool, 4094*4096), LOR_SUCCESS);
 
     for (size_t i = 0; i < 50; i++) {
         UserType *ut = Lor_mem_pool_alloc(pool, sizeof *ut);
@@ -53,15 +53,15 @@ static void TEST_MEM_POOL_ALLOC(void **state)
     }
     assert_null(Lor_mem_pool_alloc(pool, SIZE_MAX));
 
-    assert_int_equal(Lor_mem_pool_discard(pool, false), LOR_MP_SUCCESS);
-    assert_int_equal(Lor_mem_pool_destroy(&pool), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_discard(pool, false), LOR_SUCCESS);
+    assert_int_equal(Lor_mem_pool_destroy(&pool), LOR_SUCCESS);
 }
 
 static void TEST_MEM_POOL_CONTAINS(void **state)
 {
     Lor_mem_pool *pool = Lor_mem_pool_create();
     assert_non_null(pool);
-    assert_int_equal(Lor_mem_pool_init(pool, 256), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_init(pool, 256), LOR_SUCCESS);
 
 
     UserType *ut = Lor_mem_pool_alloc(pool, sizeof *ut);
@@ -73,8 +73,8 @@ static void TEST_MEM_POOL_CONTAINS(void **state)
     assert_false(Lor_mem_pool_contains(pool, mem));
     free(mem);
 
-    assert_int_equal(Lor_mem_pool_discard(pool, false), LOR_MP_SUCCESS);
-    assert_int_equal(Lor_mem_pool_destroy(&pool), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_discard(pool, false), LOR_SUCCESS);
+    assert_int_equal(Lor_mem_pool_destroy(&pool), LOR_SUCCESS);
 }
 
 static void TEST_MEM_POOL_STRDUP(void **state)
@@ -89,7 +89,7 @@ static void TEST_MEM_POOL_STRDUP(void **state)
         [3] = "THIS IS NOT BY ANY STRECH OF IMAGINATION RIGOROUS",
         [4] = "BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOM"
     };
-    assert_int_equal(Lor_mem_pool_init(pool, 5*101), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_init(pool, 5*101), LOR_SUCCESS);
 
     for (size_t i = 0; i < 5; i++) {
         char *ptr = Lor_mem_pool_strdup(pool, strs[i]);
@@ -105,30 +105,30 @@ static void TEST_MEM_POOL_STRDUP(void **state)
         free(sptr);
     }
 
-    assert_int_equal(Lor_mem_pool_discard(pool, false), LOR_MP_SUCCESS);
-    assert_int_equal(Lor_mem_pool_destroy(&pool), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_discard(pool, false), LOR_SUCCESS);
+    assert_int_equal(Lor_mem_pool_destroy(&pool), LOR_SUCCESS);
 }
 
 static void TEST_MEM_POOL_COMBINE(void **state)
 {
     Lor_mem_pool *pool1 = Lor_mem_pool_create();
     assert_non_null(pool1);
-    assert_int_equal(Lor_mem_pool_init(pool1, 256), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_init(pool1, 256), LOR_SUCCESS);
 
     Lor_mem_pool *pool2 = Lor_mem_pool_create();
     assert_non_null(pool2);
-    assert_int_equal(Lor_mem_pool_init(pool2, 1024), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_init(pool2, 1024), LOR_SUCCESS);
 
     size_t szsum = pool1->poolalloc + pool2->poolalloc;
     void *mem = (void *) pool2->mpblock->space;
-    assert_int_equal(Lor_mem_pool_combine(pool1, pool2), LOR_MP_SUCCESS);
-    assert_int_equal(Lor_mem_pool_destroy(&pool2), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_combine(pool1, pool2), LOR_SUCCESS);
+    assert_int_equal(Lor_mem_pool_destroy(&pool2), LOR_SUCCESS);
 
     assert_int_equal(szsum, pool1->poolalloc);
     assert_true(Lor_mem_pool_contains(pool1, mem));
 
-    assert_int_equal(Lor_mem_pool_discard(pool1, false), LOR_MP_SUCCESS);
-    assert_int_equal(Lor_mem_pool_destroy(&pool1), LOR_MP_SUCCESS);
+    assert_int_equal(Lor_mem_pool_discard(pool1, false), LOR_SUCCESS);
+    assert_int_equal(Lor_mem_pool_destroy(&pool1), LOR_SUCCESS);
 }
 
 
