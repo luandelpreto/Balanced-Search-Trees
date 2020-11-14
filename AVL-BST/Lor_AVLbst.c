@@ -17,7 +17,7 @@ Lor_AVL_bst *Lor_AVL_create(void)
 {
     Lor_AVL_bst *tree = malloc(sizeof *tree);
     if (!tree) {
-        LOR_PERROR("malloc failed");
+        LOR_PERROR("malloc failed", __func__);
         return NULL;
     }
     return tree;
@@ -26,7 +26,7 @@ Lor_AVL_bst *Lor_AVL_create(void)
 int Lor_AVL_init(Lor_AVL_bst *restrict tree, Lor_AVL_compare compare, Lor_AVL_alloc alloc,
               Lor_AVL_free_node freenode, Lor_AVL_free_data freedata)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
 
     if (!compare) {
         return LOR_COMPARE_FN_NOT_PROVIDED_ERR;
@@ -49,7 +49,7 @@ int Lor_AVL_init(Lor_AVL_bst *restrict tree, Lor_AVL_compare compare, Lor_AVL_al
 
 int Lor_AVL_clear(Lor_AVL_bst *restrict tree)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
 
     if (!tree->root) {
         return LOR_FREE_NULLPTR_WARN;
@@ -98,8 +98,8 @@ int Lor_AVL_destroy(Lor_AVL_bst **restrict tree)
 
 Lor_AVL_bst_node *Lor_AVL_find(Lor_AVL_bst *restrict tree, const void *key)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
-    Lor_assert(key, "argument key must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
+    Lor_assert(key, __func__, "argument key must be non-NULL");
 
     if (!tree->root->subtrees[0]) {
         return NULL;
@@ -119,13 +119,13 @@ Lor_AVL_bst_node *Lor_AVL_find(Lor_AVL_bst *restrict tree, const void *key)
 
 Lor_AVL_bst_node *Lor_AVL_interval_find(Lor_AVL_bst *restrict tree, const void *a, const void *b)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
-    Lor_assert(a && b, "arguments a and b must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
+    Lor_assert(a && b, __func__, "arguments a and b must be non-NULL");
 
     Lor_AVL_bst_node *list = NULL;
     Lor_AVL_bst_node **stack = malloc(2 * tree->nitems * sizeof(*stack));
     if (!stack) {
-        LOR_PERROR("malloc failed");
+        LOR_PERROR("malloc failed", __func__);
         return NULL;
     }
     size_t top = 0;
@@ -159,7 +159,7 @@ Lor_AVL_bst_node *Lor_AVL_interval_find(Lor_AVL_bst *restrict tree, const void *
 
 inline void *Lor_AVL_get_data_from_node(Lor_AVL_bst_node *node)
 {
-    Lor_assert(node, "argument node must be non-NULL");
+    Lor_assert(node, __func__, "argument node must be non-NULL");
 
     if (node->subtrees[1]) { /* not a leaf node */
         return NULL;
@@ -169,8 +169,8 @@ inline void *Lor_AVL_get_data_from_node(Lor_AVL_bst_node *node)
 
 void Lor_AVL_process_node_list(Lor_AVL_bst_node *nodelst, Lor_AVL_map mapfn)
 {
-    Lor_assert(nodelst, "argument nodelst must be non-NULL");
-    Lor_assert(mapfn, "argument mapfn must be non-NULL");
+    Lor_assert(nodelst, __func__, "argument nodelst must be non-NULL");
+    Lor_assert(mapfn, __func__, "argument mapfn must be non-NULL");
 
     for (Lor_AVL_bst_node *p = nodelst; p; p = p->subtrees[1]) {
         mapfn(p->subtrees[0]);
@@ -179,8 +179,8 @@ void Lor_AVL_process_node_list(Lor_AVL_bst_node *nodelst, Lor_AVL_map mapfn)
 
 void Lor_AVL_clear_node_list(Lor_AVL_bst *restrict tree, Lor_AVL_bst_node *nodelst)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
-    Lor_assert(nodelst, "argument nodelst must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
+    Lor_assert(nodelst, __func__, "argument nodelst must be non-NULL");
 
     Lor_AVL_bst_node *q = NULL;
     for (Lor_AVL_bst_node *p = nodelst; p; p = q) {
@@ -191,9 +191,9 @@ void Lor_AVL_clear_node_list(Lor_AVL_bst *restrict tree, Lor_AVL_bst_node *nodel
 
 int Lor_AVL_insert(Lor_AVL_bst *restrict tree, void *key, void *data)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
-    Lor_assert(tree->root, "root of tree must be non-NULL");
-    Lor_assert(key && data, "arguments key and data must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
+    Lor_assert(tree->root, __func__, "root of tree must be non-NULL");
+    Lor_assert(key && data, __func__, "arguments key and data must be non-NULL");
 
     if (!tree->root->subtrees[0]) {  /* empty tree */
         tree->root->subtrees[0] = (Lor_AVL_bst_node *) data;
@@ -311,9 +311,9 @@ int Lor_AVL_insert(Lor_AVL_bst *restrict tree, void *key, void *data)
 
 int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
-    Lor_assert(tree->root, "root of tree must be non-NULL");
-    Lor_assert(key, "argument key must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
+    Lor_assert(tree->root, __func__,  "root of tree must be non-NULL");
+    Lor_assert(key, __func__, "argument key must be non-NULL");
 
     if (!tree->root->subtrees[0]) {  // empty tree
         *data = NULL;
@@ -421,8 +421,8 @@ int Lor_AVL_delete(Lor_AVL_bst *restrict tree, void *key, void **data)
 
 int Lor_AVL_traverse_lr(Lor_AVL_bst *restrict tree, Lor_AVL_map mapfn)
 {
-    Lor_assert(tree, "argument tree must be non-NULL");
-    Lor_assert(mapfn, "argument mapfn must be non-NULL");
+    Lor_assert(tree, __func__, "argument tree must be non-NULL");
+    Lor_assert(mapfn, __func__, "argument mapfn must be non-NULL");
 
     if (!tree->root->subtrees[0]) { /* empty tree */
         return LOR_EMPTY_TREE_ERR;

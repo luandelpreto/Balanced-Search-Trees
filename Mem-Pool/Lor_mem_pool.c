@@ -11,9 +11,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define USIZE_OVERFLOW_MSG(a, b)                                                                             \
-    fprintf(stderr, "[%s:%lu]: [OVERFLOW]: size_t overflow encountered at: %"PRIuMAX" + %"PRIuMAX"\n", \
-                __FILE__, __LINE__+0UL, (uintmax_t) (a), (uintmax_t) (b));
+#define USIZE_OVERFLOW_MSG(a, b, func)                                                                             \
+    fprintf(stderr, "[%s:%s:%lu]: [OVERFLOW]: size_t overflow encountered at: %"PRIuMAX" + %"PRIuMAX"\n", \
+                __FILE__, func, __LINE__+0UL, (uintmax_t) (a), (uintmax_t) (b));
 
 
 static size_t __st_add(jmp_buf, size_t, size_t);
@@ -39,7 +39,7 @@ static mem_pool_block *__mem_pool_alloc_block(Lor_mem_pool *pool, size_t blockal
     jmp_buf env;
     int val = setjmp(env);
     if (val == LOR_USIZE_OVERFLOW_ERR) {
-        USIZE_OVERFLOW_MSG(sizeof(mem_pool_block), blockalloc);
+        USIZE_OVERFLOW_MSG(sizeof(mem_pool_block), blockalloc, __func__);
         *overflow = true;
         pool->poolalloc = oldpoolalloc;
         return NULL;
@@ -48,7 +48,7 @@ static mem_pool_block *__mem_pool_alloc_block(Lor_mem_pool *pool, size_t blockal
 
     mem_pool_block *p = malloc(szsum);
     if (!p) {
-        LOR_PERROR("malloc failed");
+        LOR_PERROR("malloc failed", __func__);
         pool->poolalloc = oldpoolalloc;
         return NULL;
     }
@@ -72,7 +72,7 @@ Lor_mem_pool *Lor_mem_pool_create(void)
 {
     Lor_mem_pool *pool = malloc(sizeof *pool);
     if (!pool) {
-        LOR_PERROR("malloc failed");
+        LOR_PERROR("malloc failed", __func__);
         return NULL;
     }
     return pool;
@@ -80,7 +80,7 @@ Lor_mem_pool *Lor_mem_pool_create(void)
 
 int Lor_mem_pool_init(Lor_mem_pool *pool, size_t size)
 {
-    Lor_assert(pool, "argument 'pool' must be non-NULL");
+    Lor_assert(pool, __func__, "argument 'pool' must be non-NULL");
 
     memset(pool, 0, sizeof *pool);
     pool->blockalloc = 0;
@@ -106,7 +106,7 @@ int Lor_mem_pool_init(Lor_mem_pool *pool, size_t size)
 
 int Lor_mem_pool_destroy(Lor_mem_pool **pool)
 {
-    Lor_assert(*pool, "address of pointer 'pool' must be non-NULL");
+    Lor_assert(*pool, __func__, "address of pointer 'pool' must be non-NULL");
 
     if ((*pool)->mpblock) {
         return LOR_POSSIBLE_MEMLEAK_WARN;
@@ -118,7 +118,7 @@ int Lor_mem_pool_destroy(Lor_mem_pool **pool)
 
 int Lor_mem_pool_discard(Lor_mem_pool *pool, bool invalidate_mem)
 {
-    Lor_assert(pool, "argument 'pool' must be non-NULL");
+    Lor_assert(pool, __func__, "argument 'pool' must be non-NULL");
 
     if (!pool->mpblock) {
         return LOR_FREE_NULLPTR_WARN;
@@ -140,12 +140,12 @@ int Lor_mem_pool_discard(Lor_mem_pool *pool, bool invalidate_mem)
 
 void *Lor_mem_pool_alloc(Lor_mem_pool *pool, size_t len)
 {
-    Lor_assert(pool, "argument 'pool' must be non-NULL");
+    Lor_assert(pool, __func__, "argument 'pool' must be non-NULL");
 
     /* Check for size_t overflow and round up to a uintmax_t alignment */
     size_t alignment = sizeof(uintmax_t) - (len & (sizeof(uintmax_t) - 1));
     if (UNSIGNED_ADD_OVERFLOWS(len, alignment)) {
-        USIZE_OVERFLOW_MSG(len, alignment);
+        USIZE_OVERFLOW_MSG(len, alignment, __func__);
         return NULL;
     }
     else if (len & (sizeof(uintmax_t) - 1)) {
@@ -178,7 +178,7 @@ void *Lor_mem_pool_alloc(Lor_mem_pool *pool, size_t len)
 
 void *Lor_mem_pool_calloc(Lor_mem_pool *pool, size_t count, size_t size)
 {
-    Lor_assert(pool, "argument 'pool' must be non-NULL");
+    Lor_assert(pool, __func__, "argument 'pool' must be non-NULL");
 
     if (!count || !size) {
         return NULL;
@@ -198,7 +198,7 @@ void *Lor_mem_pool_calloc(Lor_mem_pool *pool, size_t count, size_t size)
 
 char *Lor_mem_pool_strdup(Lor_mem_pool *pool, const char *str)
 {
-    Lor_assert(pool, "argument 'pool' must be non-NULL");
+    Lor_assert(pool, __func__, "argument 'pool' must be non-NULL");
 
     size_t len = strlen(str) + 1;
     char *retstr = Lor_mem_pool_alloc(pool, len);
@@ -210,7 +210,7 @@ char *Lor_mem_pool_strdup(Lor_mem_pool *pool, const char *str)
 
 char *Lor_mem_pool_strndup(Lor_mem_pool *pool, const char *str, size_t len)
 {
-    Lor_assert(pool, "argument 'pool' must be non-NULL");
+    Lor_assert(pool, __func__, "argument 'pool' must be non-NULL");
 
     char *p = memchr(str, '\0', len);
     size_t actuallen = (p ? p - str : len);
@@ -224,7 +224,7 @@ char *Lor_mem_pool_strndup(Lor_mem_pool *pool, const char *str, size_t len)
 
 bool Lor_mem_pool_contains(Lor_mem_pool *pool, void *mem)
 {
-    Lor_assert(pool, "argument 'pool' must be non-NULL");
+    Lor_assert(pool, __func__, "argument 'pool' must be non-NULL");
 
     /* Check if memory is allocated in any block. */
     for (mem_pool_block *p = pool->mpblock; p; p = p->nextblock) {
@@ -237,7 +237,7 @@ bool Lor_mem_pool_contains(Lor_mem_pool *pool, void *mem)
 
 int Lor_mem_pool_combine(Lor_mem_pool *dst, Lor_mem_pool *src)
 {
-    Lor_assert(dst && src, "arguments 'dst' and 'src' must be non-NULL");
+    Lor_assert(dst && src, __func__, "arguments 'dst' and 'src' must be non-NULL");
 
     /* Handling size_t overflow */
     jmp_buf env;
